@@ -4,14 +4,34 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded!!!!');
   document.getElementById("rev").innerHTML = THREE.REVISION;
 
+  const scene = new THREE.Scene();
+
+  const geometry = new THREE.BoxGeometry(1, 1.5, 1);
+  const material = new THREE.MeshBasicMaterial({color: "#FF0000", wireframe: true});
+  const cube = new THREE.Mesh(geometry, material);
+  cube.position.set(0, 0, -3);
+  cube.rotation.set(0, Math.PI/4, 0);
+  scene.add(cube);
+
+  const camera = new THREE.PerspectiveCamera();
+  camera.position.set(1, 1, 5);
+
+  const renderer = new THREE.WebGLRenderer({alpha: true});
+  renderer.setSize(500, 500);
+  renderer.render(scene, camera);
+
   const video = document.createElement("video");
   navigator.mediaDevices.getUserMedia({video: true}).then((stream) => {
     video.srcObject = stream;
     video.play();
   });
+
   video.style.position = "absolute";
-  video.style.width = 500; 
-  video.style.height = 500; 
+  video.style.width = renderer.domElement.width;
+  video.style.height = renderer.domElement.height;
+  renderer.domElement.style.position = "absolute";
+
   document.body.appendChild(video);
+  document.body.appendChild(renderer.domElement);
 });
 
